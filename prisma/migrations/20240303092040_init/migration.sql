@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "users" ALTER COLUMN "salary" SET DEFAULT 0,
+ALTER COLUMN "profileImg" DROP NOT NULL;

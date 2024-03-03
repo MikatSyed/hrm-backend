@@ -1,0 +1,93 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String       @id @default(uuid())
+  empId         String
+  fname         String
+  lname         String
+  email         String       @unique
+  password      String
+  role          Role
+  gender        String
+  bloodGroup    String
+  contactNo     String
+  dateOfBirth   String
+  dateOfJoining String
+  dateOfLeaving String?
+  salary        Float        @default(0)
+  nid           Int
+  address       String
+  profileImg    String?
+  DepartmentId  String
+  Department    Department   @relation(fields: [DepartmentId], references: [id])
+  designationId String
+  Designation   Designation? @relation(fields: [designationId], references: [id])
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  Attendance    Attendance[]
+  Leave         Leave[]
+
+  @@map("users")
+}
+
+model Department {
+  id        String   @id @default(uuid())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  User      User[]
+}
+
+model Designation {
+  id   String @id @default(uuid())
+  name String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  User      User[]
+}
+
+model Attendance {
+  id        String   @id @default(uuid())
+  date      String
+  arrival   String
+  departure String   @default("none")
+  userId    String
+  Users     User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Leave {
+  id        String   @id @default(uuid())
+  startDate String
+  endDate   String
+  status    Status   @default(pending)
+  reason    String?
+  userId    String
+  Users     User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum Role {
+  admin
+  hr
+  employee
+}
+
+enum Status {
+  pending
+  approved
+  decliend
+}
