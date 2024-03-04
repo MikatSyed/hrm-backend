@@ -1,5 +1,6 @@
 import { User } from '@prisma/client';
 import bcrypt from 'bcrypt';
+import fs from "fs/promises";
 import httpStatus from 'http-status';
 import { Secret } from 'jsonwebtoken';
 import config from '../../../config';
@@ -7,6 +8,7 @@ import ApiError from '../../../errors/ApiError';
 import { generateId } from '../../../helpers/IdGenerate';
 import { jwtHelpers } from '../../../helpers/jwtHelpers';
 import prisma from '../../../shared/prisma';
+import { sendEMail } from '../../utils/sendMail';
 import {
   ILoginUser,
   ILoginUserResponse,
@@ -14,23 +16,39 @@ import {
 } from './auth.interface';
 
 const signup = async (data: User): Promise<Partial<User>> => {
-  const { password, role, ...userData } = data; // Destructure password and role, spread the rest of the data
+  const { password, role, ...userData } = data; 
   const hashedPassword = await bcrypt.hash(
     password,
     Number(config.bycrypt_salt_rounds)
   );
-  const empId = generateId(role); // Generate ID based on role
+  const userName = generateId(role); // Generate ID based on role
   const result = await prisma.user.create({
     data: {
       ...userData, 
-      empId, 
+      userName, 
       password: hashedPassword, 
       role 
     },
+
   });
 
+  const subject = 'Welcome to HRM - Your Login Details';
+  const from = process.env.Email;
+  const htmlContent = await fs.readFile(__dirname + '/../../utils/welcome_email_template.html', 'utf8');
+
+ 
+  const replacedHtmlContent = htmlContent
+  .replace('{{ userName }}', userName)
+  .replace('{{ password }}', password);
+
+  if (result) {
+    sendEMail(from, result.email, subject, replacedHtmlContent);
+  }
   return result;
 };
+
+
+
 const loginUser = async (payload: ILoginUser): Promise<ILoginUserResponse> => {
   const { email, password } = payload;
 

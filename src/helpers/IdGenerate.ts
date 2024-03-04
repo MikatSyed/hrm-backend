@@ -1,6 +1,6 @@
-let empCounter = 100;
-let hrCounter = 100;
-let adminCounter = 100;
+let empCounter = 1000;
+let hrCounter = 1000;
+let adminCounter = 1000;
 
 export const generateId = (role: string): string => {
   let idPrefix = '';
@@ -8,15 +8,15 @@ export const generateId = (role: string): string => {
 
   switch (role.toLowerCase()) {
     case 'employee':
-      idPrefix = 'emp';
+      idPrefix = 'EMP-';
       counter = empCounter++;
       break;
     case 'hr':
-      idPrefix = 'h';
+      idPrefix = 'HR-';
       counter = hrCounter++;
       break;
     case 'admin':
-      idPrefix = 'a';
+      idPrefix = 'ADM-';
       counter = adminCounter++;
       break;
     default:

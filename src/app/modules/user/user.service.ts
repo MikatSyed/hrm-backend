@@ -9,18 +9,8 @@ import ApiError from '../../../errors/ApiError';
 import prisma from '../../../shared/prisma';
 import { IResponseUser } from './user.interface';
 
-const getAllFromDB = async (): Promise<Partial<IResponseUser[]>> => {
-  const result = await prisma.user.findMany({
-    select: {
-      id: true,
-      name: true,
-      email: true,
-      role: true,
-      contactNo: true,
-      address: true,
-      profileImg: true,
-    },
-  });
+const getAllFromDB = async (): Promise<User[]> => {
+  const result = await prisma.user.findMany({});
   return result;
 };
 
@@ -97,11 +87,11 @@ const deleteByIdFromDB = async (id: string): Promise<IResponseUser> => {
     throw new ApiError(httpStatus.NOT_FOUND, 'User does not exist');
   }
   const result = await prisma.$transaction(async transactionClient => {
-    await transactionClient.order.deleteMany({
-      where: {
-        userId: isUserExist?.id,
-      },
-    });
+    // await transactionClient.order.deleteMany({
+    //   where: {
+    //     userId: isUserExist?.id,
+    //   },
+    // });
 
     const data = await transactionClient.user.delete({
       where: {

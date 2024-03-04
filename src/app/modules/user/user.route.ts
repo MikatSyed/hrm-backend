@@ -18,7 +18,7 @@ router.patch(
 );
 router.delete(
   '/:id',
-  auth(ENUM_USER_ROLE.HR),
+  // auth(ENUM_USER_ROLE.HR),
   UserController.deleteByIdFromDB
 );
 

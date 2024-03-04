@@ -7,7 +7,7 @@ CREATE TYPE "Status" AS ENUM ('pending', 'approved', 'decliend');
 -- CreateTable
 CREATE TABLE "users" (
     "id" TEXT NOT NULL,
-    "empId" TEXT NOT NULL,
+    "userName" TEXT NOT NULL,
     "fname" TEXT NOT NULL,
     "lname" TEXT NOT NULL,
     "email" TEXT NOT NULL,
@@ -19,10 +19,10 @@ CREATE TABLE "users" (
     "dateOfBirth" TEXT NOT NULL,
     "dateOfJoining" TEXT NOT NULL,
     "dateOfLeaving" TEXT,
-    "salary" DOUBLE PRECISION NOT NULL,
+    "salary" DOUBLE PRECISION NOT NULL DEFAULT 0,
     "nid" INTEGER NOT NULL,
     "address" TEXT NOT NULL,
-    "profileImg" TEXT NOT NULL,
+    "profileImg" TEXT,
     "DepartmentId" TEXT NOT NULL,
     "designationId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -35,6 +35,8 @@ CREATE TABLE "users" (
 CREATE TABLE "Department" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Department_pkey" PRIMARY KEY ("id")
 );
@@ -43,6 +45,8 @@ CREATE TABLE "Department" (
 CREATE TABLE "Designation" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Designation_pkey" PRIMARY KEY ("id")
 );
